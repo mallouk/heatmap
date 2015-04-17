@@ -70,6 +70,7 @@ void drawScene(void){
 //           printf("%u, %u, %u\n", pixelData[i], pixelData[i+1], pixelData[i+2]);
 //           glColor3ub(pixelData[i], pixelData[i+1], pixelData[i+2]);
            glColor3ub(pixelData[i], 0, 0);
+           glColor3f(1, 0, 0);
 //           glVertex3f(i*2, (pixelData[i] - pixelData[i+1]), 0);
            glVertex3f(i*2, (pixelData[i]), 0);
 //       cout << pixelData[i] << endl;   
@@ -83,8 +84,14 @@ void drawScene(void){
 //           printf("%u, %u, %u\n", pixelData[i], pixelData[i+1], pixelData[i+2]);
 //           glColor3ub(pixelData[i], pixelData[i+1], pixelData[i+2]);
            glColor3ub(0, pixelData[i+1], 0);
+           glColor3f(0, 1, 0);
 //           glVertex3f(i*2, (pixelData[i+1]), 0);
-//       cout << pixelData[i] << endl;   
+           int test =  pixelData[i] -pixelData[i+2];
+           glVertex3f(i*2, test, 0);
+
+//           cout << test << endl;
+           
+//       cout << pixelData[i] - pixelData[i+2] << endl;   
        }
    glEnd();
 
@@ -94,7 +101,8 @@ void drawScene(void){
 //           printf("%u, %u, %u\n", pixelData[i], pixelData[i+1], pixelData[i+2]);
 //           glColor3ub(pixelData[i], pixelData[i+1], pixelData[i+2]);
            glColor3ub(0, 0, pixelData[i+2]);
-//           glVertex3f(i*2, (pixelData[i+2]), 0);
+           glColor3f(0, 0, 1);
+           glVertex3f(i*2, (pixelData[i+2]), 0);
 //       cout << pixelData[i] << endl;   
        }
    glEnd();
@@ -128,7 +136,7 @@ void resize(int w, int h){
     // i.e., define the viewing box.
 //    glOrtho(0.0, 100.0, 0.0, 100.0, -1.0, 1.0);
    
-    glOrtho(-5.0, 150.0, -260.0, 260, -1.0, 1.0);
+    glOrtho(-5.0, 150.0, -260.0, 300, -1.0, 1.0);
  
     // Set matrix mode to modelview.
     glMatrixMode(GL_MODELVIEW);
