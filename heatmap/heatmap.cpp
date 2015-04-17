@@ -41,7 +41,7 @@ void generatePixels()
    BitMapFile *image;
 
    // Load the images.
-   image = getbmp("test.bmp");
+   image = getbmp("colors.bmp");
 
    pixelData[image->sizeY * image->sizeX * 3];
    numPixels = image->sizeY * image->sizeX * 3;
@@ -72,16 +72,43 @@ void drawScene(void)
 
    glLineWidth(5);
    
-   glBegin(GL_LINES)
+   glBegin(GL_LINE_STRIP);
        for (int i = 0; i < numPixels; i+=3){
-           printf("%u, %u, %u\n", pixelData[i], pixelData[i+1], pixelData[i+2]);
+//           printf("%u, %u, %u\n", pixelData[i], pixelData[i+1], pixelData[i+2]);
+//           glColor3ub(pixelData[i], pixelData[i+1], pixelData[i+2]);
+           glColor3ub(pixelData[i], 0, 0);
+           glVertex3f(i*2, (pixelData[i]), 0);
 //       cout << pixelData[i] << endl;   
        }
    glEnd();
    
 
+   glBegin(GL_LINE_STRIP);
+       for (int i = 0; i < numPixels; i+=3){
+//           printf("%u, %u, %u\n", pixelData[i], pixelData[i+1], pixelData[i+2]);
+//           glColor3ub(pixelData[i], pixelData[i+1], pixelData[i+2]);
+           glColor3ub(0, pixelData[i+1], 0);
+           glVertex3f(i*2, (pixelData[i+1]), 0);
+//       cout << pixelData[i] << endl;   
+       }
+   glEnd();
+
+
+   glBegin(GL_LINE_STRIP);
+       for (int i = 0; i < numPixels; i+=3){
+//           printf("%u, %u, %u\n", pixelData[i], pixelData[i+1], pixelData[i+2]);
+//           glColor3ub(pixelData[i], pixelData[i+1], pixelData[i+2]);
+           glColor3ub(0, 0, pixelData[i+2]);
+           glVertex3f(i*2, (pixelData[i+2]), 0);
+//       cout << pixelData[i] << endl;   
+       }
+   glEnd();
+
+
+
+
    glLoadIdentity();
-   gluLookAt(0.0, 10.0, 15.0 + d, 0.0, 10.0, d, 0.0, 1.0, 0.0);
+   // gluLookAt(0.0, 10.0, 15.0 + d, 0.0, 10.0, d, 0.0, 1.0, 0.0);
 
    glutSwapBuffers();	
 }
@@ -94,7 +121,7 @@ void resize(int w, int h)
    glLoadIdentity();
 //   glFrustum(-5.0, 5.0, -5.0, 5.0, 5.0, 100.0);
 
-    glOrtho(0.0, 100.0, 0.0, 100.0, -1.0, 1.0);   
+    glOrtho(-5.0, 150.0, -5.0, 260, -1.0, 1.0);   
 
 
    glMatrixMode(GL_MODELVIEW);
