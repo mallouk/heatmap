@@ -1,15 +1,11 @@
-//////////////////////////////////////////////////////////////////////////////////////////// 
-// fieldAndSky.cpp
-//
-// This program shows a grass-textured field and a textured sky. The viewpoint can be moved.
-//
-// Interaction:
-// Press the up and down arrow keys to move the viewpoint over the field.
-//
-// Sumanta Guha
-//
-// Texture Credits: See ExperimenterSource/Textures/TEXTURE_CREDITS.txt
-////////////////////////////////////////////////////////////////////////////////////////////
+/** Heatmap Program
+ *
+ *  4-14-15
+ *  CPSC 4500 - Graphical Algorithms
+ *  Semester Project - Heatmap
+ *  Matthew Jallouk
+ *  Written on Linux Ubuntu Distribution in Emacs
+ */
 
 #include <cstdlib>
 #include <iostream>
@@ -31,44 +27,32 @@
 using namespace std;
 
 // Globals.
-static unsigned int texture[2]; // Array of texture indices.
 static float d = 0.0; // Distance parameter in gluLookAt().
 static float angle = 0;
-static int numTextures = 8;
-
 static unsigned int pixelData[1];
+
 static int numPixels = 1;
 
 
 // Load external textures.
-void loadExternalTextures()			
+void generatePixels()
 {
    // Local storage for bmp image data.
-   BitMapFile *image[numTextures];
+   BitMapFile *image;
 
    // Load the images.
-   image[0] = getbmp("test.bmp");
+   image = getbmp("test.bmp");
 
-   pixelData[image[0]->sizeY * image[0]->sizeX * 3];
-   numPixels = image[0]->sizeY * image[0]->sizeX * 3;
+   pixelData[image->sizeY * image->sizeX * 3];
+   numPixels = image->sizeY * image->sizeX * 3;
    int i = 0;
-   for(int j = 0; j < 4*image[0]->sizeY * image[0]->sizeX; j+=4)
+   for(int j = 0; j < 4*image->sizeY * image->sizeX; j+=4)
    {
-       pixelData[i] = image[0]->data[j];
-       pixelData[i+1] = image[0]->data[j+1];
-       pixelData[i+2] = image[0]->data[j+2];
+       pixelData[i] = image->data[j];
+       pixelData[i+1] = image->data[j+1];
+       pixelData[i+2] = image->data[j+2];
        i+=3;
    }
-
-   
-   // Bind grass image to texture object texture[0]. 
-   glBindTexture(GL_TEXTURE_2D, texture[0]); 
-   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image[0]->sizeX, image[0]->sizeY, 0, 
-	            GL_RGBA, GL_UNSIGNED_BYTE, image[0]->data);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 }
 
 // Initialization routine.
@@ -77,21 +61,8 @@ void setup(void)
    glClearColor(0.0, 0.0, 0.0, 0.0);
    glEnable(GL_DEPTH_TEST); 
 
-   // Create texture ids.
-   glGenTextures(numTextures, texture);
-
    // Load external textures.
-   loadExternalTextures();
-
-   // Specify how texture values combine with current surface color values.
-   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); 
-
-   // Turn on OpenGL texturing.
-   glEnable(GL_TEXTURE_2D); 
-
-   // Cull back faces.
-   glEnable(GL_CULL_FACE);
-   glCullFace(GL_BACK);
+   generatePixels();
 }
 
 // Drawing routine.
@@ -99,24 +70,18 @@ void drawScene(void)
 {
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-   for (int i = 0; i < numPixels; i++){
-       //printf("%u", pixelData[i]);
-       cout << pixelData[i] << endl;   
-   }
-
+   glLineWidth(5);
+   
+   glBegin(GL_LINES)
+       for (int i = 0; i < numPixels; i+=3){
+           printf("%u, %u, %u\n", pixelData[i], pixelData[i+1], pixelData[i+2]);
+//       cout << pixelData[i] << endl;   
+       }
+   glEnd();
+   
 
    glLoadIdentity();
    gluLookAt(0.0, 10.0, 15.0 + d, 0.0, 10.0, d, 0.0, 1.0, 0.0);
-
-   // Map the grass texture onto a rectangle along the xz-plane.
-   glBindTexture(GL_TEXTURE_2D, texture[0]);        
-   glBegin(GL_POLYGON);
-      glTexCoord2f(0.0, 0.0); glVertex3f(-100.0, 0.0, 100.0);
-      glTexCoord2f(8.0, 0.0); glVertex3f(100.0, 0.0, 100.0);
-      glTexCoord2f(8.0, 8.0); glVertex3f(100.0, 0.0, -100.0);
-      glTexCoord2f(0.0, 8.0); glVertex3f(-100.0, 0.0, -100.0);
-   glEnd();
-
 
    glutSwapBuffers();	
 }
@@ -127,7 +92,11 @@ void resize(int w, int h)
    glViewport(0, 0, w, h);
    glMatrixMode(GL_PROJECTION);
    glLoadIdentity();
-   glFrustum(-5.0, 5.0, -5.0, 5.0, 5.0, 100.0);
+//   glFrustum(-5.0, 5.0, -5.0, 5.0, 5.0, 100.0);
+
+    glOrtho(0.0, 100.0, 0.0, 100.0, -1.0, 1.0);   
+
+
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
 }
@@ -186,7 +155,7 @@ int main(int argc, char **argv)
    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
    glutInitWindowSize(500, 500);
    glutInitWindowPosition(100, 100);
-   glutCreateWindow("fieldAndSky.cpp");
+   glutCreateWindow("Heatmap!");
    glutDisplayFunc(drawScene);
    glutReshapeFunc(resize);
    glutKeyboardFunc(keyInput);
