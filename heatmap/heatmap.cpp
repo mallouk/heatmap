@@ -1,40 +1,33 @@
-/** Heatmap Program
+/** Heatmap program
  *
- *  4-14-15
+ *  4-13-15
  *  CPSC 4500 - Graphical Algorithms
- *  Semester Project - Heatmap
+ *  Semester Project
  *  Matthew Jallouk
- *  Written on Linux Ubuntu Distribution in Emacs
+ *  Written on Linux Ubuntu Distribution in EMACS
  */
 
-#include <cstdlib>
 #include <iostream>
-#include <fstream>
+#include <math.h>
 
 #ifdef __APPLE__
-#  include <GL/glew.h>
-#  include <GLUT/freeglut.h>
-#  include <OpenGL/glext.h>
+#include <GLUT/glut.h>
 #else
-#  include <GL/glew.h>
-#  include <GL/freeglut.h>
-#  include <GL/glext.h>
-#pragma comment(lib, "glew32.lib") 
+#include <GL/glut.h>
 #endif
 
+#define PI 3.14159265358979324626433
 #include "getbmp.h"
+
+
 
 using namespace std;
 
-// Globals.
-static float d = 0.0; // Distance parameter in gluLookAt().
-static float angle = 0;
 static unsigned int pixelData[1];
-
 static int numPixels = 1;
 
 
-// Load external textures.
+
 void generatePixels()
 {
    // Local storage for bmp image data.
@@ -55,20 +48,20 @@ void generatePixels()
    }
 }
 
-// Initialization routine.
-void setup(void)
-{    
-   glClearColor(0.0, 0.0, 0.0, 0.0);
-   glEnable(GL_DEPTH_TEST); 
 
-   // Load external textures.
-   generatePixels();
-}
 
-// Drawing routine.
-void drawScene(void)
-{
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+
+
+// Drawing (display) routine.
+void drawScene(void){
+    // Clear screen to background color.
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Set drawing color.
+    glColor3f(0, 0 ,0);
+
 
    glLineWidth(5);
    
@@ -77,18 +70,20 @@ void drawScene(void)
 //           printf("%u, %u, %u\n", pixelData[i], pixelData[i+1], pixelData[i+2]);
 //           glColor3ub(pixelData[i], pixelData[i+1], pixelData[i+2]);
            glColor3ub(pixelData[i], 0, 0);
+//           glVertex3f(i*2, (pixelData[i] - pixelData[i+1]), 0);
            glVertex3f(i*2, (pixelData[i]), 0);
 //       cout << pixelData[i] << endl;   
        }
    glEnd();
-   
+
+
 
    glBegin(GL_LINE_STRIP);
        for (int i = 0; i < numPixels; i+=3){
 //           printf("%u, %u, %u\n", pixelData[i], pixelData[i+1], pixelData[i+2]);
 //           glColor3ub(pixelData[i], pixelData[i+1], pixelData[i+2]);
            glColor3ub(0, pixelData[i+1], 0);
-           glVertex3f(i*2, (pixelData[i+1]), 0);
+//           glVertex3f(i*2, (pixelData[i+1]), 0);
 //       cout << pixelData[i] << endl;   
        }
    glEnd();
@@ -99,101 +94,86 @@ void drawScene(void)
 //           printf("%u, %u, %u\n", pixelData[i], pixelData[i+1], pixelData[i+2]);
 //           glColor3ub(pixelData[i], pixelData[i+1], pixelData[i+2]);
            glColor3ub(0, 0, pixelData[i+2]);
-           glVertex3f(i*2, (pixelData[i+2]), 0);
+//           glVertex3f(i*2, (pixelData[i+2]), 0);
 //       cout << pixelData[i] << endl;   
        }
    glEnd();
 
 
 
+    // Flush created objects to the screen, i.e., force rendering.
+    glFlush(); 
+}
 
-   glLoadIdentity();
-   // gluLookAt(0.0, 10.0, 15.0 + d, 0.0, 10.0, d, 0.0, 1.0, 0.0);
-
-   glutSwapBuffers();	
+// Initialization routine.
+void setup(void){
+    // Set background (or clearing) color.
+    glClearColor(1.0, 1.0, 1.0, 0.0); 
+    generatePixels();
+    
 }
 
 // OpenGL window reshape routine.
-void resize(int w, int h)
-{
-   glViewport(0, 0, w, h);
-   glMatrixMode(GL_PROJECTION);
-   glLoadIdentity();
-//   glFrustum(-5.0, 5.0, -5.0, 5.0, 5.0, 100.0);
-
-    glOrtho(-5.0, 150.0, -5.0, 260, -1.0, 1.0);   
-
-
-   glMatrixMode(GL_MODELVIEW);
-   glLoadIdentity();
+void resize(int w, int h){
+    // Set viewport size to be entire OpenGL window.
+    glViewport(0, 0, (GLsizei)w, (GLsizei)h);
+    
+    // Set matrix mode to projection.
+    glMatrixMode(GL_PROJECTION);
+    
+    // Clear current projection matrix to identity.
+    glLoadIdentity();
+    
+    // Specify the orthographic (or perpendicular) projection, 
+    // i.e., define the viewing box.
+//    glOrtho(0.0, 100.0, 0.0, 100.0, -1.0, 1.0);
+   
+    glOrtho(-5.0, 150.0, -260.0, 260, -1.0, 1.0);
+ 
+    // Set matrix mode to modelview.
+    glMatrixMode(GL_MODELVIEW);
+    
+    // Clear current modelview matrix to identity.
+    glLoadIdentity();
 }
 
 // Keyboard input processing routine.
-void keyInput(unsigned char key, int x, int y)
-{
-   switch(key) 
-   {
-      case 27:
-          exit(0);
+void keyInput(unsigned char key, int x, int y){
+   switch(key){
+      case 27:  // Press escape to exit.
+         exit(0);
          break;
       default:
          break;
    }
 }
 
-// Callback routine for non-ASCII key entry.
-void specialKeyInput(int key, int x, int y)
-{
-   if (key == GLUT_KEY_UP) 
-   {
-      if (d > -50.0) d -= 0.1;
-   }
-   if (key == GLUT_KEY_DOWN) 
-   {
-      if (d < 15.0) d += 0.1;
-   }
-   glutPostRedisplay();
-}
-
-// Routine to output interaction instructions to the C++ window.
-void printInteraction(void)
-{
-   cout << "Interaction:" << endl;
-   cout << "Press the up and down arrow keys to move the viewpoint over the field." << endl;
-}
-
-void update()
-{
-    angle+=1;
-    if (angle == 360){ angle = 0;}
-    glutPostRedisplay();
-}
-
-
-// Main routine.
-int main(int argc, char **argv) 
-{
-   printInteraction();
+// Main routine: defines window properties, creates window,
+// registers callback routines and begins processing.
+int main(int argc, char **argv){  
+   // Initialize GLUT.
    glutInit(&argc, argv);
-
-   glutInitContextVersion(2, 1);
-   glutInitContextProfile(GLUT_COMPATIBILITY_PROFILE);
-
-   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-   glutInitWindowSize(500, 500);
-   glutInitWindowPosition(100, 100);
-   glutCreateWindow("Heatmap!");
-   glutDisplayFunc(drawScene);
-   glutReshapeFunc(resize);
-   glutKeyboardFunc(keyInput);
-   glutSpecialFunc(specialKeyInput);
-   glutIdleFunc(update);
+ 
+   // Set display mode as single-buffered and RGB color.
+   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB); 
    
+   // Set OpenGL window size.
+   glutInitWindowSize(500, 500);
 
-   glewExperimental = GL_TRUE;
-   glewInit();
-
-   setup(); 
-
-   glutMainLoop(); 
+   // Set position of OpenGL window upper-left corner.
+   glutInitWindowPosition(100, 100); 
+   
+   // Create OpenGL window with title.
+   glutCreateWindow("Heatmap!");
+   // Initialize.
+   setup();
+   // Register display routine.
+   glutDisplayFunc(drawScene);
+   // Register reshape routine.
+   glutReshapeFunc(resize);
+   // Register keyboard routine.
+   glutKeyboardFunc(keyInput);
+   // Begin processing.
+   glutMainLoop();
+   return 0;  
 }
