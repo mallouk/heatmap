@@ -41,7 +41,7 @@ void generatePixels()
    BitMapFile *image;
 
    // Load the images.
-   image = getbmp("colors.bmp");
+   image = getbmp("color_test.bmp");
 
    pixelData[image->sizeY * image->sizeX * 3];
    numPixels = image->sizeY * image->sizeX;
@@ -69,7 +69,7 @@ void generatePixels()
 
 void smoothPixels()
 {
-    int smoothDepth = 2;
+    int smoothDepth = 5;
     for (int x = 0; x < smoothDepth; x++){
         for (int i = 0; i < numPixels; i++){
             if (i == 0){
@@ -111,7 +111,7 @@ void drawScene(void){
        for (int i = 0; i < numPixels; i++){
 //           glColor3ub(pixels[i].red, 0, 0);
            glColor3f(1, 0, 0);
-           glVertex3f(i*6, (pixels[i].red), 0);
+           glVertex3f(i, (pixels[i].red), 0);
        }
    glEnd();
 
@@ -120,7 +120,7 @@ void drawScene(void){
        for (int i = 0; i < numPixels; i++){
 //           glColor3ub(0. pixels[i].green, 0);
            glColor3f(0, 1, 0);
-           glVertex3f(i*6, (pixels[i].green), 0);
+           glVertex3f(i, (pixels[i].green), 0);
        }
    glEnd();
 
@@ -129,7 +129,7 @@ void drawScene(void){
        for (int i = 0; i < numPixels; i++){
 //           glColor3ub(pixels[i].red, 0, 0);
            glColor3f(0, 0, 1);
-           glVertex3f(i*6, (pixels[i].blue), 0);
+           glVertex3f(i, (pixels[i].blue), 0);
        }
    glEnd();
  
@@ -166,7 +166,7 @@ void resize(int w, int h){
     // i.e., define the viewing box.
 //    glOrtho(0.0, 100.0, 0.0, 100.0, -1.0, 1.0);
    
-    glOrtho(-5.0, 150.0, -260.0, 300, -1.0, 1.0);
+    glOrtho(-5.0, numPixels+10, 0.0, 300, -1.0, 1.0);
  
     // Set matrix mode to modelview.
     glMatrixMode(GL_MODELVIEW);
