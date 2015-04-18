@@ -9,7 +9,7 @@
 
 #include <iostream>
 #include <math.h>
-
+#include <stdio.h>
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
@@ -57,7 +57,7 @@ void generatePixels()
    }
 
    int x = 0;
-   for (int j = 0; j < image->sizeY * image->sizeX * 3; j+=3){
+   for (int j = 0; j < image->sizeY * image->sizeX * 4; j+=4){
               pixels[x].red = image->data[j];
               pixels[x].green = image->data[j+1];
               pixels[x].blue= image->data[j+2];
@@ -67,6 +67,30 @@ void generatePixels()
 }
 
 
+void smoothPixels()
+{
+    int smoothDepth = 2;
+    for (int x = 0; x < smoothDepth; x++){
+        for (int i = 0; i < numPixels; i++){
+            if (i == 0){
+                pixels[i].red = (pixels[i].red + pixels[i+1].red)/2;
+                pixels[i].green = (pixels[i].green + pixels[i+1].green)/2;
+                pixels[i].blue = (pixels[i].blue+ pixels[i+1].blue)/2;
+            }else if (i == (numPixels - 1)){
+                pixels[i].red = (pixels[i].red + pixels[i-1].red)/2;
+                pixels[i].green = (pixels[i].green + pixels[i-1].green)/2;
+                pixels[i].blue = (pixels[i].blue+ pixels[i-1].blue)/2;
+            }else{
+                pixels[i].red = (pixels[i-1].red + pixels[i].red + pixels[i+1].red )/3;
+                pixels[i].green = (pixels[i-1].green + pixels[i].green + pixels[i+1].green )/3;
+                pixels[i].blue = (pixels[i-1].blue + pixels[i].blue + pixels[i+1].blue )/3;
+            }
+            
+//        cout << pixels[i].red << " " << pixels[i].green << " " << pixels[i].blue << endl;
+       } 
+    }
+    
+}
 
 
 
@@ -108,6 +132,7 @@ void drawScene(void){
            glVertex3f(i*6, (pixels[i].blue), 0);
        }
    glEnd();
+ 
 
 
     // Flush created objects to the screen, i.e., force rendering.
@@ -119,17 +144,11 @@ void setup(void){
     // Set background (or clearing) color.
     glClearColor(1.0, 1.0, 1.0, 0.0); 
     generatePixels();
+    smoothPixels();
+    
     for (int i = 0; i < numPixels; i++){
-        cout << pixels[i].red << " " << pixels[i].green << " " << pixels[i].blue << endl;
-        
+//        cout << pixels[i].red << " " << pixels[i].green << " " << pixels[i].blue << endl;
     }
-
-    for (int i = 0; i < numPixels*3; i+=3){
-        cout << pixelData[i] << endl;
-        
-    }
-    
-    
 }
 
 // OpenGL window reshape routine.
