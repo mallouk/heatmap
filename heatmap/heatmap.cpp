@@ -23,9 +23,16 @@
 
 using namespace std;
 
+struct Pixel
+{
+    float red;
+    float green;
+    float blue;
+};
+
 static unsigned int pixelData[1];
 static int numPixels = 1;
-
+static Pixel pixels[1];
 
 
 void generatePixels()
@@ -37,7 +44,9 @@ void generatePixels()
    image = getbmp("colors.bmp");
 
    pixelData[image->sizeY * image->sizeX * 3];
-   numPixels = image->sizeY * image->sizeX * 3;
+   numPixels = image->sizeY * image->sizeX;
+   pixels[numPixels];
+
    int i = 0;
    for(int j = 0; j < 4*image->sizeY * image->sizeX; j+=4)
    {
@@ -46,6 +55,15 @@ void generatePixels()
        pixelData[i+2] = image->data[j+2];
        i+=3;
    }
+
+   int x = 0;
+   for (int j = 0; j < image->sizeY * image->sizeX * 3; j+=3){
+              pixels[x].red = image->data[j];
+              pixels[x].green = image->data[j+1];
+              pixels[x].blue= image->data[j+2];
+              x++;
+   }
+   
 }
 
 
@@ -66,47 +84,30 @@ void drawScene(void){
    glLineWidth(5);
    
    glBegin(GL_LINE_STRIP);
-       for (int i = 0; i < numPixels; i+=3){
-//           printf("%u, %u, %u\n", pixelData[i], pixelData[i+1], pixelData[i+2]);
-//           glColor3ub(pixelData[i], pixelData[i+1], pixelData[i+2]);
-           glColor3ub(pixelData[i], 0, 0);
+       for (int i = 0; i < numPixels; i++){
+//           glColor3ub(pixels[i].red, 0, 0);
            glColor3f(1, 0, 0);
-//           glVertex3f(i*2, (pixelData[i] - pixelData[i+1]), 0);
-           glVertex3f(i*2, (pixelData[i]), 0);
-//       cout << pixelData[i] << endl;   
+           glVertex3f(i*6, (pixels[i].red), 0);
        }
    glEnd();
 
 
-
    glBegin(GL_LINE_STRIP);
-       for (int i = 0; i < numPixels; i+=3){
-//           printf("%u, %u, %u\n", pixelData[i], pixelData[i+1], pixelData[i+2]);
-//           glColor3ub(pixelData[i], pixelData[i+1], pixelData[i+2]);
-           glColor3ub(0, pixelData[i+1], 0);
+       for (int i = 0; i < numPixels; i++){
+//           glColor3ub(0. pixels[i].green, 0);
            glColor3f(0, 1, 0);
-//           glVertex3f(i*2, (pixelData[i+1]), 0);
-           int test =  pixelData[i] -pixelData[i+2];
-           glVertex3f(i*2, test, 0);
-
-//           cout << test << endl;
-           
-//       cout << pixelData[i] - pixelData[i+2] << endl;   
+           glVertex3f(i*6, (pixels[i].green), 0);
        }
    glEnd();
 
 
    glBegin(GL_LINE_STRIP);
-       for (int i = 0; i < numPixels; i+=3){
-//           printf("%u, %u, %u\n", pixelData[i], pixelData[i+1], pixelData[i+2]);
-//           glColor3ub(pixelData[i], pixelData[i+1], pixelData[i+2]);
-           glColor3ub(0, 0, pixelData[i+2]);
+       for (int i = 0; i < numPixels; i++){
+//           glColor3ub(pixels[i].red, 0, 0);
            glColor3f(0, 0, 1);
-           glVertex3f(i*2, (pixelData[i+2]), 0);
-//       cout << pixelData[i] << endl;   
+           glVertex3f(i*6, (pixels[i].blue), 0);
        }
    glEnd();
-
 
 
     // Flush created objects to the screen, i.e., force rendering.
@@ -118,6 +119,16 @@ void setup(void){
     // Set background (or clearing) color.
     glClearColor(1.0, 1.0, 1.0, 0.0); 
     generatePixels();
+    for (int i = 0; i < numPixels; i++){
+        cout << pixels[i].red << " " << pixels[i].green << " " << pixels[i].blue << endl;
+        
+    }
+
+    for (int i = 0; i < numPixels*3; i+=3){
+        cout << pixelData[i] << endl;
+        
+    }
+    
     
 }
 
