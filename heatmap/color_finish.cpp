@@ -77,7 +77,7 @@ void drawFloor(){
        glVertex3f(-100,-1,-100);
        glVertex3f(100,-1,-100);
        glVertex3f(100,-1,100);
-       glVertex3f(-100,-1,100);
+       glVertex3f(-100,10,100);
     glEnd();
 }
 

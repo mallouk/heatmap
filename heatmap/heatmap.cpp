@@ -109,22 +109,24 @@ void drawScene(void){
 
     glPushMatrix();
 
-    gluLookAt(0, 0, 1, 
-              0, 0, 0,
-              0, 1, 0);
+//    gluLookAt(0, 0, 1, 
+//              0, 0, 0,
+//              0, 1, 0);
 
-    glRotatef(rotateAngle, 0, 0, -1);
+    glRotatef(rotateAngle, 1, 0, 0);
     
     glLineWidth(3);
     
     glBegin(GL_LINE_STRIP);
-       for (int i = 0; i < numPixels; i++){
+       for (float q = -1; q <= 1; q+=.1){    
 //           glColor3ub(pixels[i].red, 0, 0);
            glColor3f(1, 0, 0);
-           glVertex3f(i - numPixels/2, (pixels[i].red) - 125, -1);
+           glVertex3f(i - numPixels/2, (pixels[i].red) - 125, q);
        }
     glEnd();
     
+    
+
 
     glBegin(GL_LINE_STRIP);
        for (int i = 0; i < numPixels; i++){
@@ -176,7 +178,7 @@ void resize(int w, int h){
     // i.e., define the viewing box.
 
    
-    glFrustum(-numPixels/2+20, numPixels/2-20, -100, 100, 1, 3);
+    glFrustum(-numPixels/2, numPixels/2, -numPixels/2, numPixels/2, 1, 3);
     
 
     // Set matrix mode to modelview.
