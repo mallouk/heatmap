@@ -118,10 +118,10 @@ void drawScene(void){
     glLineWidth(3);
     
     glBegin(GL_LINE_STRIP);
-       for (float q = -1; q <= 1; q+=.1){    
+       for (int i = 0; i < numPixels; i++){  
 //           glColor3ub(pixels[i].red, 0, 0);
            glColor3f(1, 0, 0);
-           glVertex3f(i - numPixels/2, (pixels[i].red) - 125, q);
+           glVertex3f(i - numPixels/2, (pixels[i].red) - 125, -1);
        }
     glEnd();
     
