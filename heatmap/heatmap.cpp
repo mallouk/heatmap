@@ -23,6 +23,8 @@
 
 using namespace std;
 
+static float rotateAngle = 0;
+
 struct Pixel
 {
     float red;
@@ -33,7 +35,7 @@ struct Pixel
 static unsigned int pixelData[1];
 static int numPixels = 1;
 static Pixel pixels[1];
-static float rotate = 0;
+
 
 void generatePixels()
 {
@@ -101,16 +103,17 @@ void drawScene(void){
     // Clear screen to background color.
     glClear(GL_COLOR_BUFFER_BIT);
 
-//    gluLookAt(0, 0, 1, 
-//              0, 0, 0,
-//              0, 1, 0);
     
     // Set drawing color.
     glColor3f(0, 0 ,0);
 
-    // glRotatef(rotate, 1, 0, 0);
-    
-    //glutWireCube(2);
+    glPushMatrix();
+
+    gluLookAt(0, 0, 1, 
+              0, 0, 0,
+              0, 1, 0);
+
+    glRotatef(rotateAngle, 0, 0, -1);
     
     glLineWidth(3);
     
@@ -118,7 +121,7 @@ void drawScene(void){
        for (int i = 0; i < numPixels; i++){
 //           glColor3ub(pixels[i].red, 0, 0);
            glColor3f(1, 0, 0);
-           glVertex3f(i - numPixels/2, (pixels[i].red) - 125, 0);
+           glVertex3f(i - numPixels/2, (pixels[i].red) - 125, -1);
        }
     glEnd();
     
@@ -127,7 +130,7 @@ void drawScene(void){
        for (int i = 0; i < numPixels; i++){
 //           glColor3ub(0. pixels[i].green, 0);
            glColor3f(0, 1, 0);
-           glVertex3f(i - numPixels/2 , (pixels[i].green) - 125, 0);
+           glVertex3f(i - numPixels/2 , (pixels[i].green) - 125, -1);
        }
     glEnd();
 
@@ -136,10 +139,12 @@ void drawScene(void){
        for (int i = 0; i < numPixels; i++){
 //           glColor3ub(pixels[i].red, 0, 0);
            glColor3f(0, 0, 1);
-           glVertex3f(i - numPixels/2, (pixels[i].blue) - 125, 0);
+           glVertex3f(i - numPixels/2, (pixels[i].blue) - 125, -1);
        }
     glEnd();
  
+    glPopMatrix();
+    
     // Flush created objects to the screen, i.e., force rendering.
     glFlush(); 
 }
@@ -169,11 +174,9 @@ void resize(int w, int h){
     
     // Specify the orthographic (or perpendicular) projection, 
     // i.e., define the viewing box.
-//    glOrtho(0.0, 100.0, 0.0, 100.0, -1.0, 1.0);
+
    
-    //glOrtho(-5.0, numPixels+10, 0.0, 300, -1.0, 1.0);
-//    glOrtho(-numPixels/2-10, numPixels/2+10, -130, 130, -1.0, 1.0);
-    glFrustum(-numPixels/2-10, numPixels/2+10, -135, 135, 1, 1);
+    glFrustum(-numPixels/2+20, numPixels/2-20, -100, 100, 1, 3);
     
 
     // Set matrix mode to modelview.
@@ -190,17 +193,16 @@ void keyInput(unsigned char key, int x, int y){
        exit(0);
        break;
    case 'r':
-       rotate+=1;
+       rotateAngle+=1;
        glutPostRedisplay();
        break;
    case 'e':
-       rotate-=1;
+       rotateAngle-=1;
        glutPostRedisplay();
        break;
    default:
        break;
    }
-
 }
 
 // Main routine: defines window properties, creates window,
