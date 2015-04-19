@@ -33,7 +33,7 @@ struct Pixel
 static unsigned int pixelData[1];
 static int numPixels = 1;
 static Pixel pixels[1];
-
+static float rotate = 0;
 
 void generatePixels()
 {
@@ -101,40 +101,45 @@ void drawScene(void){
     // Clear screen to background color.
     glClear(GL_COLOR_BUFFER_BIT);
 
+//    gluLookAt(0, 0, 1, 
+//              0, 0, 0,
+//              0, 1, 0);
+    
     // Set drawing color.
     glColor3f(0, 0 ,0);
 
-
-   glLineWidth(5);
-   
-   glBegin(GL_LINE_STRIP);
+    // glRotatef(rotate, 1, 0, 0);
+    
+    //glutWireCube(2);
+    
+    glLineWidth(3);
+    
+    glBegin(GL_LINE_STRIP);
        for (int i = 0; i < numPixels; i++){
 //           glColor3ub(pixels[i].red, 0, 0);
            glColor3f(1, 0, 0);
-           glVertex3f(i, (pixels[i].red), 0);
+           glVertex3f(i - numPixels/2, (pixels[i].red) - 125, 0);
        }
-   glEnd();
+    glEnd();
+    
 
-
-   glBegin(GL_LINE_STRIP);
+    glBegin(GL_LINE_STRIP);
        for (int i = 0; i < numPixels; i++){
 //           glColor3ub(0. pixels[i].green, 0);
            glColor3f(0, 1, 0);
-           glVertex3f(i, (pixels[i].green), 0);
+           glVertex3f(i - numPixels/2 , (pixels[i].green) - 125, 0);
        }
-   glEnd();
+    glEnd();
 
 
-   glBegin(GL_LINE_STRIP);
+    glBegin(GL_LINE_STRIP);
        for (int i = 0; i < numPixels; i++){
 //           glColor3ub(pixels[i].red, 0, 0);
            glColor3f(0, 0, 1);
-           glVertex3f(i, (pixels[i].blue), 0);
+           glVertex3f(i - numPixels/2, (pixels[i].blue) - 125, 0);
        }
-   glEnd();
+    glEnd();
  
-
-
     // Flush created objects to the screen, i.e., force rendering.
     glFlush(); 
 }
@@ -166,8 +171,11 @@ void resize(int w, int h){
     // i.e., define the viewing box.
 //    glOrtho(0.0, 100.0, 0.0, 100.0, -1.0, 1.0);
    
-    glOrtho(-5.0, numPixels+10, 0.0, 300, -1.0, 1.0);
- 
+    //glOrtho(-5.0, numPixels+10, 0.0, 300, -1.0, 1.0);
+//    glOrtho(-numPixels/2-10, numPixels/2+10, -130, 130, -1.0, 1.0);
+    glFrustum(-numPixels/2-10, numPixels/2+10, -135, 135, 1, 1);
+    
+
     // Set matrix mode to modelview.
     glMatrixMode(GL_MODELVIEW);
     
@@ -178,12 +186,21 @@ void resize(int w, int h){
 // Keyboard input processing routine.
 void keyInput(unsigned char key, int x, int y){
    switch(key){
-      case 27:  // Press escape to exit.
-         exit(0);
-         break;
-      default:
-         break;
+   case 27:  // Press escape to exit.
+       exit(0);
+       break;
+   case 'r':
+       rotate+=1;
+       glutPostRedisplay();
+       break;
+   case 'e':
+       rotate-=1;
+       glutPostRedisplay();
+       break;
+   default:
+       break;
    }
+
 }
 
 // Main routine: defines window properties, creates window,
