@@ -125,8 +125,6 @@ void drawScene(void){
        }
     glEnd();
     
-    
-
 
     glBegin(GL_LINE_STRIP);
        for (int i = 0; i < numPixels; i++){
