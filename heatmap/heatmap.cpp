@@ -43,7 +43,7 @@ void generatePixels()
    BitMapFile *image;
 
    // Load the images.
-   image = getbmp("color_test.bmp");
+   image = getbmp("colors.bmp");
 
    pixelData[image->sizeY * image->sizeX * 3];
    numPixels = image->sizeY * image->sizeX;
@@ -94,6 +94,148 @@ void smoothPixels()
     
 }
 
+void drawRedCurve()
+{
+    int x = 0, z = -1;
+    int caseSys = 1;
+    glBegin(GL_TRIANGLES);
+       for (int i = 0; i < 2*numPixels; i++){
+           glColor3f(1, 0, 0);
+
+           if (caseSys == 1){
+               glVertex3f(x - numPixels/2, (pixels[x].red) - 125, z);
+               z++;
+               caseSys=2;
+           }else if (caseSys == 2){
+               glVertex3f(x - numPixels/2, (pixels[x].red) - 125, z);
+               z--;
+               x++;
+               caseSys=3;
+           }else if (caseSys == 3){
+               glVertex3f(x - numPixels/2, (pixels[x].red) - 125, z);
+               caseSys=1;
+           }
+       }
+    glEnd();
+    
+    x = 0, z = 0;
+    caseSys = 1;
+    glBegin(GL_TRIANGLES);
+       for (int i = 0; i < 2*numPixels; i++){
+           glColor3f(1, 0, 0);
+
+           if (caseSys == 1){
+               glVertex3f(x - numPixels/2, (pixels[x].red) - 125, z);
+               z--;
+               x++;
+               caseSys=2;
+           }else if (caseSys == 2){
+               glVertex3f(x - numPixels/2, (pixels[x].red) - 125, z);
+               z++;
+               caseSys=3;
+           }else if (caseSys == 3){
+               glVertex3f(x - numPixels/2, (pixels[x].red) - 125, z);
+               caseSys=1;
+           }
+       }
+    glEnd();
+}
+
+
+void drawGreenCurve()
+{
+    int x = 0, z = -1;
+    int caseSys = 1;
+    glBegin(GL_TRIANGLES);
+       for (int i = 0; i < 2*numPixels; i++){
+           glColor3f(0, 1, 0);
+
+           if (caseSys == 1){
+               glVertex3f(x - numPixels/2, (pixels[x].green) - 125, z);
+               z++;
+               caseSys=2;
+           }else if (caseSys == 2){
+               glVertex3f(x - numPixels/2, (pixels[x].green) - 125, z);
+               z--;
+               x++;
+               caseSys=3;
+           }else if (caseSys == 3){
+               glVertex3f(x - numPixels/2, (pixels[x].green) - 125, z);
+               caseSys=1;
+           }
+       }
+    glEnd();
+    
+    x = 0, z = 0;
+    caseSys = 1;
+    glBegin(GL_TRIANGLES);
+       for (int i = 0; i < 2*numPixels; i++){
+           glColor3f(0, 1, 0);
+
+           if (caseSys == 1){
+               glVertex3f(x - numPixels/2, (pixels[x].green) - 125, z);
+               z--;
+               x++;
+               caseSys=2;
+           }else if (caseSys == 2){
+               glVertex3f(x - numPixels/2, (pixels[x].green) - 125, z);
+               z++;
+               caseSys=3;
+           }else if (caseSys == 3){
+               glVertex3f(x - numPixels/2, (pixels[x].green) - 125, z);
+               caseSys=1;
+           }
+       }
+    glEnd();
+}
+
+void drawBlueCurve()
+{
+    int x = 0, z = -1;
+    int caseSys = 1;
+    glBegin(GL_TRIANGLES);
+       for (int i = 0; i < 2*numPixels; i++){
+           glColor3f(0, 0, 1);
+
+           if (caseSys == 1){
+               glVertex3f(x - numPixels/2, (pixels[x].blue) - 125, z);
+               z++;
+               caseSys=2;
+           }else if (caseSys == 2){
+               glVertex3f(x - numPixels/2, (pixels[x].blue) - 125, z);
+               z--;
+               x++;
+               caseSys=3;
+           }else if (caseSys == 3){
+               glVertex3f(x - numPixels/2, (pixels[x].blue) - 125, z);
+               caseSys=1;
+           }
+       }
+    glEnd();
+    
+    x = 0, z = 0;
+    caseSys = 1;
+    glBegin(GL_TRIANGLES);
+       for (int i = 0; i < 2*numPixels; i++){
+           glColor3f(0, 0, 1);
+
+           if (caseSys == 1){
+               glVertex3f(x - numPixels/2, (pixels[x].blue) - 125, z);
+               z--;
+               x++;
+               caseSys=2;
+           }else if (caseSys == 2){
+               glVertex3f(x - numPixels/2, (pixels[x].blue) - 125, z);
+               z++;
+               caseSys=3;
+           }else if (caseSys == 3){
+               glVertex3f(x - numPixels/2, (pixels[x].blue) - 125, z);
+               caseSys=1;
+           }
+       }
+    glEnd();
+}
+
 
 
 
@@ -109,19 +251,25 @@ void drawScene(void){
 
     glPushMatrix();
 
-//    gluLookAt(0, 0, 1, 
-//              0, 0, 0,
-//              0, 1, 0);
+    gluLookAt(0, 0, 1, 
+              0, 0, 0,
+              0, 1, 0);
 
-    glRotatef(rotateAngle, 1, 0, 0);
+    glRotatef(rotateAngle, 0, 1, 0);
     
     glLineWidth(3);
     
+    drawRedCurve();
+    drawGreenCurve();
+    drawBlueCurve();
+    
+
+
     glBegin(GL_LINE_STRIP);
        for (int i = 0; i < numPixels; i++){  
 //           glColor3ub(pixels[i].red, 0, 0);
            glColor3f(1, 0, 0);
-           glVertex3f(i - numPixels/2, (pixels[i].red) - 125, -1);
+//           glVertex3f(i - numPixels/2, (pixels[i].red) - 125, -2);
        }
     glEnd();
     
@@ -157,9 +305,7 @@ void setup(void){
     generatePixels();
     smoothPixels();
     
-    for (int i = 0; i < numPixels; i++){
-//        cout << pixels[i].red << " " << pixels[i].green << " " << pixels[i].blue << endl;
-    }
+
 }
 
 // OpenGL window reshape routine.
@@ -177,7 +323,7 @@ void resize(int w, int h){
     // i.e., define the viewing box.
 
    
-    glFrustum(-numPixels/2, numPixels/2, -numPixels/2, numPixels/2, 1, 3);
+    glFrustum(-numPixels/2 - 20, numPixels/2 + 20, -numPixels/2 - 100, numPixels/2 + 100, 1, 5);
     
 
     // Set matrix mode to modelview.
