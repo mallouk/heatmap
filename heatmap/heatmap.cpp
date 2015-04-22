@@ -42,7 +42,7 @@ void generatePixels()
    // Local storage for bmp image data.
    BitMapFile *image;
 
-   // Load the images.
+   // Load the images.f
    image = getbmp("colors.bmp");
 
    pixelData[image->sizeY * image->sizeX * 3];
