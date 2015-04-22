@@ -24,6 +24,9 @@
 using namespace std;
 
 static float rotateAngle = 0;
+static int xVar = 0;
+static int yVar = 0;
+static int zVar = -7;
 
 struct Pixel
 {
@@ -251,7 +254,7 @@ void drawScene(void){
 
     glPushMatrix();
 
-    gluLookAt(0, 0, 1, 
+    gluLookAt(xVar, yVar, zVar, 
               0, 0, 0,
               0, 1, 0);
 
@@ -263,34 +266,6 @@ void drawScene(void){
     drawGreenCurve();
     drawBlueCurve();
     
-
-
-    glBegin(GL_LINE_STRIP);
-       for (int i = 0; i < numPixels; i++){  
-//           glColor3ub(pixels[i].red, 0, 0);
-           glColor3f(1, 0, 0);
-//           glVertex3f(i - numPixels/2, (pixels[i].red) - 125, -2);
-       }
-    glEnd();
-    
-
-
-    glBegin(GL_LINE_STRIP);
-       for (int i = 0; i < numPixels; i++){
-//           glColor3ub(0. pixels[i].green, 0);
-           glColor3f(0, 1, 0);
-           glVertex3f(i - numPixels/2 , (pixels[i].green) - 125, -1);
-       }
-    glEnd();
-
-
-    glBegin(GL_LINE_STRIP);
-       for (int i = 0; i < numPixels; i++){
-//           glColor3ub(pixels[i].red, 0, 0);
-           glColor3f(0, 0, 1);
-           glVertex3f(i - numPixels/2, (pixels[i].blue) - 125, -1);
-       }
-    glEnd();
  
     glPopMatrix();
     
@@ -323,8 +298,8 @@ void resize(int w, int h){
     // i.e., define the viewing box.
 
    
-    glFrustum(-numPixels/2 - 20, numPixels/2 + 20, -numPixels/2 - 100, numPixels/2 + 100, 1, 5);
-    
+//    glFrustum(-numPixels/2 - 20, numPixels/2 + 20, -numPixels/2 - 100, numPixels/2 + 100, 1, 5);
+    gluPerspective(170, .2, 1, 25);
 
     // Set matrix mode to modelview.
     glMatrixMode(GL_MODELVIEW);
@@ -345,6 +320,14 @@ void keyInput(unsigned char key, int x, int y){
        break;
    case 'e':
        rotateAngle-=1;
+       glutPostRedisplay();
+       break;
+   case 's':
+       zVar--;
+       glutPostRedisplay();
+       break;
+   case 'w':
+       zVar++;
        glutPostRedisplay();
        break;
    default:
