@@ -263,10 +263,11 @@ void drawScene(void){
 
     glPushMatrix();
 
+    
     gluLookAt(xVar, yVar, zVar, 
-              xVar, 0, 0,
+              xVar, yVar, 0,
               0, 1, 0);
-
+    
     glRotatef(rotateAngle, 0, 1, 0);
     
     glLineWidth(3);
@@ -347,6 +348,14 @@ void keyInput(unsigned char key, int x, int y){
        xVar--;
        glutPostRedisplay();
        break;
+   case 'j':
+       yVar++;
+       glutPostRedisplay();
+       break;
+   case 'k':
+       yVar--;
+       glutPostRedisplay();
+       break;       
    default:
        break;
    }
