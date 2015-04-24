@@ -24,9 +24,9 @@
 using namespace std;
 
 static float rotateAngle = 0;
-static int xVar = 0;
+static int xVar = -3;
 static int yVar = 0;
-static int zVar = -7;
+static int zVar = -8;
 
 struct Pixel
 {
@@ -46,7 +46,7 @@ void generatePixels()
    BitMapFile *image;
 
    // Load the images.f
-   image = getbmp("colors.bmp");
+   image = getbmp("color_test.bmp");
 
    pixelData[image->sizeY * image->sizeX * 3];
    numPixels = image->sizeY * image->sizeX;
@@ -99,7 +99,7 @@ void smoothPixels()
 
 void drawRedCurve()
 {
-    int x = 0, z = -1;
+    int x = 0, z = -4;
     int caseSys = 1;
     glBegin(GL_TRIANGLES);
        for (int i = 0; i < 2*numPixels; i++){
@@ -107,11 +107,11 @@ void drawRedCurve()
 
            if (caseSys == 1){
                glVertex3f(x - numPixels/2, (pixels[x].red) - 125, z);
-               z++;
+               z+=4;
                caseSys=2;
            }else if (caseSys == 2){
                glVertex3f(x - numPixels/2, (pixels[x].red) - 125, z);
-               z--;
+               z-=4;
                x++;
                caseSys=3;
            }else if (caseSys == 3){
@@ -129,12 +129,12 @@ void drawRedCurve()
 
            if (caseSys == 1){
                glVertex3f(x - numPixels/2, (pixels[x].red) - 125, z);
-               z--;
+               z-=4;
                x++;
                caseSys=2;
            }else if (caseSys == 2){
                glVertex3f(x - numPixels/2, (pixels[x].red) - 125, z);
-               z++;
+               z+=4;
                caseSys=3;
            }else if (caseSys == 3){
                glVertex3f(x - numPixels/2, (pixels[x].red) - 125, z);
@@ -147,7 +147,7 @@ void drawRedCurve()
 
 void drawGreenCurve()
 {
-    int x = 0, z = -1;
+    int x = 0, z = -4;
     int caseSys = 1;
     glBegin(GL_TRIANGLES);
        for (int i = 0; i < 2*numPixels; i++){
@@ -155,11 +155,11 @@ void drawGreenCurve()
 
            if (caseSys == 1){
                glVertex3f(x - numPixels/2, (pixels[x].green) - 125, z);
-               z++;
+               z+=4;
                caseSys=2;
            }else if (caseSys == 2){
                glVertex3f(x - numPixels/2, (pixels[x].green) - 125, z);
-               z--;
+               z-=4;
                x++;
                caseSys=3;
            }else if (caseSys == 3){
@@ -177,12 +177,12 @@ void drawGreenCurve()
 
            if (caseSys == 1){
                glVertex3f(x - numPixels/2, (pixels[x].green) - 125, z);
-               z--;
+               z-=4;
                x++;
                caseSys=2;
            }else if (caseSys == 2){
                glVertex3f(x - numPixels/2, (pixels[x].green) - 125, z);
-               z++;
+               z+=4;
                caseSys=3;
            }else if (caseSys == 3){
                glVertex3f(x - numPixels/2, (pixels[x].green) - 125, z);
@@ -194,7 +194,7 @@ void drawGreenCurve()
 
 void drawBlueCurve()
 {
-    int x = 0, z = -1;
+    int x = 0, z = -4;
     int caseSys = 1;
     glBegin(GL_TRIANGLES);
        for (int i = 0; i < 2*numPixels; i++){
@@ -202,11 +202,11 @@ void drawBlueCurve()
 
            if (caseSys == 1){
                glVertex3f(x - numPixels/2, (pixels[x].blue) - 125, z);
-               z++;
+               z+=4;
                caseSys=2;
            }else if (caseSys == 2){
                glVertex3f(x - numPixels/2, (pixels[x].blue) - 125, z);
-               z--;
+               z-=4;
                x++;
                caseSys=3;
            }else if (caseSys == 3){
@@ -224,12 +224,12 @@ void drawBlueCurve()
 
            if (caseSys == 1){
                glVertex3f(x - numPixels/2, (pixels[x].blue) - 125, z);
-               z--;
+               z-=4;
                x++;
                caseSys=2;
            }else if (caseSys == 2){
                glVertex3f(x - numPixels/2, (pixels[x].blue) - 125, z);
-               z++;
+               z+=4;
                caseSys=3;
            }else if (caseSys == 3){
                glVertex3f(x - numPixels/2, (pixels[x].blue) - 125, z);
@@ -249,13 +249,22 @@ void drawScene(void){
     glClear(GL_COLOR_BUFFER_BIT);
 
     
+    glColor3f(.5,.5,.5);
+    glBegin(GL_POLYGON);
+       glVertex3f(-200, -100, -700);
+       glVertex3f(200, -100, -700);
+       glVertex3f(200, -100, 700);
+       glVertex3f(-200, 10, 700);
+    glEnd();
+
+
     // Set drawing color.
     glColor3f(0, 0 ,0);
 
     glPushMatrix();
 
     gluLookAt(xVar, yVar, zVar, 
-              0, 0, 0,
+              xVar, 0, 0,
               0, 1, 0);
 
     glRotatef(rotateAngle, 0, 1, 0);
@@ -328,6 +337,14 @@ void keyInput(unsigned char key, int x, int y){
        break;
    case 'w':
        zVar++;
+       glutPostRedisplay();
+       break;
+   case 'a':
+       xVar++;
+       glutPostRedisplay();
+       break;
+   case 'd':
+       xVar--;
        glutPostRedisplay();
        break;
    default:
