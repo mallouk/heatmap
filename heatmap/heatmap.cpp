@@ -364,6 +364,19 @@ void keyInput(unsigned char key, int x, int y){
 // Main routine: defines window properties, creates window,
 // registers callback routines and begins processing.
 int main(int argc, char **argv){  
+
+
+    cout << "R key - Rotate in + direction across the Y axis." << endl;
+    cout << "E key - Rotate in - direction across the Y axis." << endl;
+    cout << "S key - move back one in the Z direction." << endl;
+    cout << "W key - move forward one in the Z direction." << endl;
+    cout << "A key - move to the left, X axis." << endl;
+    cout << "D key - move to the right, X axis." << endl;
+    cout << "J key - move up in the y direction." << endl;
+    cout << "K key - move down in the y direction." << endl;
+    cout << "" << endl;
+    cout << "" << endl;
+
    // Initialize GLUT.
    glutInit(&argc, argv);
  
