@@ -23,11 +23,7 @@
 
 using namespace std;
 
-static float rotateAngle = 0;
-static int xVar = 0;
-static int yVar = 5;
-static int zVar = -15;
-
+//Struct to store a pixel
 struct Pixel
 {
     float red;
@@ -35,23 +31,31 @@ struct Pixel
     float blue;
 };
 
+//Define globals
+static float rotateAngle = 0;
+static int xVar = 0;
+static int yVar = 5;
+static int zVar = -15;
 static unsigned int pixelData[1];
 static int numPixels = 1;
 static Pixel pixels[1];
 
 
+//Method that scans the pixels in the image and returns our array of pixels;
 void generatePixels()
 {
    // Local storage for bmp image data.
    BitMapFile *image;
 
-   // Load the images.f
+   // Load the images.
    image = getbmp("color_test.bmp");
 
    pixelData[image->sizeY * image->sizeX * 3];
    numPixels = image->sizeY * image->sizeX;
    pixels[numPixels];
 
+
+   //Extract pixel data from returned image
    int i = 0;
    for(int j = 0; j < 4*image->sizeY * image->sizeX; j+=4)
    {
@@ -61,6 +65,7 @@ void generatePixels()
        i+=3;
    }
 
+   //Generate pixel object array
    int x = 0;
    for (int j = 0; j < image->sizeY * image->sizeX * 4; j+=4){
               pixels[x].red = image->data[j];
@@ -68,10 +73,11 @@ void generatePixels()
               pixels[x].blue= image->data[j+2];
               x++;
    }
-   
 }
 
 
+//Method that takes the generated pixels and smooths out the points to a smooth sine curve like
+//form.
 void smoothPixels()
 {
     int smoothDepth = 5;
@@ -90,13 +96,11 @@ void smoothPixels()
                 pixels[i].green = (pixels[i-1].green + pixels[i].green + pixels[i+1].green )/3;
                 pixels[i].blue = (pixels[i-1].blue + pixels[i].blue + pixels[i+1].blue )/3;
             }
-            
-//        cout << pixels[i].red << " " << pixels[i].green << " " << pixels[i].blue << endl;
-       } 
-    }
-    
+        } 
+    }   
 }
 
+//Method that draws the red curve on the OpenGL screen
 void drawRedCurve()
 {
     int x = 0, z = -4;
@@ -145,6 +149,7 @@ void drawRedCurve()
 }
 
 
+//Method that draws the green curve on the OpenGL screen.
 void drawGreenCurve()
 {
     int x = 0, z = -4;
@@ -192,6 +197,7 @@ void drawGreenCurve()
     glEnd();
 }
 
+//Method that draws the blue curve on the OpenGL screen.
 void drawBlueCurve()
 {
     int x = 0, z = -4;
@@ -248,7 +254,7 @@ void drawScene(void){
     // Clear screen to background color.
     glClear(GL_COLOR_BUFFER_BIT);
 
-    
+    //Draw floor
     glColor3f(.5,.5,.5);
     glBegin(GL_POLYGON);
        glVertex3f(-200, -100, -700);
@@ -263,15 +269,15 @@ void drawScene(void){
 
     glPushMatrix();
 
-    
+    //Set camera view.
     gluLookAt(xVar, yVar, zVar, 
               xVar, yVar, 0,
               0, 1, 0);
     
     glRotatef(rotateAngle, 0, 1, 0);
     
+    //Draw curves
     glLineWidth(3);
-    
     drawRedCurve();
     drawGreenCurve();
     drawBlueCurve();
@@ -306,9 +312,6 @@ void resize(int w, int h){
     
     // Specify the orthographic (or perpendicular) projection, 
     // i.e., define the viewing box.
-
-   
-//    glFrustum(-numPixels/2 - 20, numPixels/2 + 20, -numPixels/2 - 100, numPixels/2 + 100, 1, 5);
     gluPerspective(170, .2, 1, 25);
 
     // Set matrix mode to modelview.
