@@ -24,9 +24,9 @@
 using namespace std;
 
 static float rotateAngle = 0;
-static int xVar = -3;
-static int yVar = 0;
-static int zVar = -8;
+static int xVar = 0;
+static int yVar = 5;
+static int zVar = -15;
 
 struct Pixel
 {
